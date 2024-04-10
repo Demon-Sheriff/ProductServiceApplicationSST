@@ -1,5 +1,6 @@
 package dev.anant.productserviceapplication.services;
 
+import dev.anant.productserviceapplication.dtos.FakeStoreProductDTO;
 import dev.anant.productserviceapplication.models.Product;
 
 import java.util.*;

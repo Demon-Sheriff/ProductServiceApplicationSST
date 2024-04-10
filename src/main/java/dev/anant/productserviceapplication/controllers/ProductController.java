@@ -1,8 +1,12 @@
 package dev.anant.productserviceapplication.controllers;
 
+import dev.anant.productserviceapplication.dtos.ExceptionDto;
+import dev.anant.productserviceapplication.dtos.FakeStoreProductDTO;
 import dev.anant.productserviceapplication.models.Product;
 import dev.anant.productserviceapplication.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -13,6 +17,7 @@ import java.util.*;
 // Also this marks that this class has methods
 // that need to run if a user sends a request.
 @RestController // this annotation is allowing us to do dependency injection.
+// the rest controller annotation also tells us that this controller is capable of handling http requests.
 public class ProductController {
 
     private ProductService productService;
@@ -20,10 +25,6 @@ public class ProductController {
     public ProductController(@Qualifier("FakeStoreProductService") ProductService productService){
         this.productService = productService;
     }
-    // Whenever anyone sends a
-    // GET request as {MY_SERVER}/hello url
-    // run this method and return whatever
-    // this is returning to the client
 
     @GetMapping("/products")
     List<Product> getAllProducts(){
@@ -31,17 +32,30 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product getSingleProduct(@PathVariable("id") Long id){
-        return productService.getSingleProduct(id);
+    public ResponseEntity getSingleProduct(@PathVariable("id") Long id){
+        //throw new RuntimeException("Something went wrong");
+        ResponseEntity<Product> responseEntity = null;
+        Product product = null;
+        try {
+            product = productService.getSingleProduct(id);
+            responseEntity = new ResponseEntity<>(product, HttpStatus.OK);
+            System.out.println("Hello");
+            return responseEntity;
+        } catch (RuntimeException exception) {
+            ExceptionDto dto = new ExceptionDto();
+            dto.setMessage("Something went wrong");
+            ResponseEntity<ExceptionDto> response =
+                    new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+            return response;
+        }
     }
 
-
 //    @PostMapping("/products")
-//    public Product createProduct(@RequestParam("title") String title, @RequestParam("description") String description){
+//    public FakeStoreProductDTO createProduct(@RequestParam("title") String title, @RequestParam("description") String description){
 //        return productService.createProduct(product);
 //    }
 //    @GetMapping("/products/category/{name}")
-//    public List<Product> getProductByCategory(@PathVariable("name") String name){
+//    public List<FakeStoreProductDTO> getProductByCategory(@PathVariable("name") String name){
 //
 //        return productService.getProductByCategory(name);
 //    }

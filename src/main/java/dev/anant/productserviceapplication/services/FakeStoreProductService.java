@@ -3,6 +3,7 @@ package dev.anant.productserviceapplication.services;
 import dev.anant.productserviceapplication.dtos.FakeStoreProductDTO;
 import dev.anant.productserviceapplication.models.Category;
 import dev.anant.productserviceapplication.models.Product;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
